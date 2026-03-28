@@ -1,10 +1,11 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Link } from 'expo-router';
-import { useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { KeyboardAvoidingView, Platform, Text, View } from 'react-native';
 import { Button, TextInput } from 'react-native-paper';
 
-import { login, selectLoginError, selectLoginStatus } from '@/features/auth';
+import { login, loginFormSchema, selectLoginStatus, type LoginFormValues } from '@/features/auth';
 import { useAlerts } from '@/providers/AlertsProvider';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 
@@ -13,23 +14,31 @@ export default function LoginScreen() {
   const dispatch = useAppDispatch();
   const { showMessage } = useAlerts();
   const loginStatus = useAppSelector(selectLoginStatus);
-  const loginError = useAppSelector(selectLoginError);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    setError,
+  } = useForm<LoginFormValues>({
+    resolver: zodResolver(loginFormSchema),
+    defaultValues: { email: '', password: '' },
+  });
 
   const busy = loginStatus === 'loading';
 
-  const onSubmit = () => {
-    void dispatch(login({ email: email.trim(), password }))
+  const onSubmit = handleSubmit((data) => {
+    void dispatch(login({ email: data.email.trim(), password: data.password }))
       .unwrap()
       .then(() => {
         showMessage('Signed in');
       })
       .catch((err: unknown) => {
         const msg = typeof err === 'string' ? err : 'Login failed';
+        setError('root', { message: msg });
         showMessage(msg);
       });
-  };
+  });
 
   return (
     <KeyboardAvoidingView
@@ -38,26 +47,44 @@ export default function LoginScreen() {
     >
       <View className="gap-4">
         <Text className="text-2xl font-bold text-neutral-900 dark:text-neutral-50">{t('loginTitle')}</Text>
-        <TextInput
-          mode="outlined"
-          label={t('email')}
-          value={email}
-          onChangeText={setEmail}
-          autoCapitalize="none"
-          keyboardType="email-address"
-          autoComplete="email"
-          disabled={busy}
+        <Controller
+          control={control}
+          name="email"
+          render={({ field: { onChange, onBlur, value } }) => (
+            <TextInput
+              mode="outlined"
+              label={t('email')}
+              value={value}
+              onBlur={onBlur}
+              onChangeText={onChange}
+              autoCapitalize="none"
+              keyboardType="email-address"
+              autoComplete="email"
+              disabled={busy}
+              error={Boolean(errors.email)}
+            />
+          )}
         />
-        <TextInput
-          mode="outlined"
-          label={t('password')}
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-          autoComplete="password"
-          disabled={busy}
+        {errors.email ? <Text className="text-sm text-red-600">{errors.email.message}</Text> : null}
+        <Controller
+          control={control}
+          name="password"
+          render={({ field: { onChange, onBlur, value } }) => (
+            <TextInput
+              mode="outlined"
+              label={t('password')}
+              value={value}
+              onBlur={onBlur}
+              onChangeText={onChange}
+              secureTextEntry
+              autoComplete="password"
+              disabled={busy}
+              error={Boolean(errors.password)}
+            />
+          )}
         />
-        {loginError ? <Text className="text-sm text-red-600">{loginError}</Text> : null}
+        {errors.password ? <Text className="text-sm text-red-600">{errors.password.message}</Text> : null}
+        {errors.root ? <Text className="text-sm text-red-600">{errors.root.message}</Text> : null}
         <Button mode="contained" onPress={onSubmit} loading={busy} disabled={busy}>
           {t('signIn')}
         </Button>

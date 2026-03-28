@@ -35,8 +35,10 @@ export function DemoBottomSheet({ label, title }: DemoBottomSheetProps) {
         enablePanDownToClose
         backdropComponent={renderBackdrop}
       >
-        <BottomSheetView style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 16 }}>
-          <Text className="text-center text-lg font-semibold">{title}</Text>
+        <BottomSheetView>
+          <View className="flex-1 items-center justify-center px-4 py-6">
+            <Text className="text-center text-lg font-semibold text-neutral-900 dark:text-neutral-100">{title}</Text>
+          </View>
         </BottomSheetView>
       </BottomSheetModal>
     </View>

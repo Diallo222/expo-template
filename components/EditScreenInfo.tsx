@@ -1,43 +1,31 @@
-import React from 'react';
-import { StyleSheet } from 'react-native';
+import { Text, View } from 'react-native';
 
 import { ExternalLink } from './ExternalLink';
 import { MonoText } from './StyledText';
-import { Text, View } from './Themed';
-
-import Colors from '@/constants/Colors';
 
 export default function EditScreenInfo({ path }: { path: string }) {
   return (
     <View>
-      <View style={styles.getStartedContainer}>
-        <Text
-          style={styles.getStartedText}
-          lightColor="rgba(0,0,0,0.8)"
-          darkColor="rgba(255,255,255,0.8)">
+      <View className="mx-12 items-center">
+        <Text className="text-center text-[17px] leading-6 text-neutral-800 dark:text-neutral-200">
           Open up the code for this screen:
         </Text>
 
-        <View
-          style={[styles.codeHighlightContainer, styles.homeScreenFilename]}
-          darkColor="rgba(255,255,255,0.05)"
-          lightColor="rgba(0,0,0,0.05)">
-          <MonoText>{path}</MonoText>
+        <View className="my-2 rounded-sm bg-black/5 px-1 dark:bg-white/5">
+          <MonoText className="text-center text-[17px] leading-6">{path}</MonoText>
         </View>
 
-        <Text
-          style={styles.getStartedText}
-          lightColor="rgba(0,0,0,0.8)"
-          darkColor="rgba(255,255,255,0.8)">
+        <Text className="text-center text-[17px] leading-6 text-neutral-800 dark:text-neutral-200">
           Change any of the text, save the file, and your app will automatically update.
         </Text>
       </View>
 
-      <View style={styles.helpContainer}>
+      <View className="mx-5 mt-4 items-center">
         <ExternalLink
-          style={styles.helpLink}
-          href="https://docs.expo.io/get-started/create-a-new-app/#opening-the-app-on-your-phonetablet">
-          <Text style={styles.helpLinkText} lightColor={Colors.light.tint}>
+          className="py-4"
+          href="https://docs.expo.io/get-started/create-a-new-app/#opening-the-app-on-your-phonetablet"
+        >
+          <Text className="text-center text-base text-[#2f95dc] dark:text-[#fff]">
             Tap here if your app does not automatically update after making changes
           </Text>
         </ExternalLink>
@@ -45,33 +33,3 @@ export default function EditScreenInfo({ path }: { path: string }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  getStartedContainer: {
-    alignItems: 'center',
-    marginHorizontal: 50,
-  },
-  homeScreenFilename: {
-    marginVertical: 7,
-  },
-  codeHighlightContainer: {
-    borderRadius: 3,
-    paddingHorizontal: 4,
-  },
-  getStartedText: {
-    fontSize: 17,
-    lineHeight: 24,
-    textAlign: 'center',
-  },
-  helpContainer: {
-    marginTop: 15,
-    marginHorizontal: 20,
-    alignItems: 'center',
-  },
-  helpLink: {
-    paddingVertical: 15,
-  },
-  helpLinkText: {
-    textAlign: 'center',
-  },
-});

@@ -1,7 +1,7 @@
-import { SymbolView } from 'expo-symbols';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { Link, Tabs } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { Pressable } from 'react-native';
+import { Pressable, View } from 'react-native';
 
 import Colors from '@/constants/Colors';
 import { useClientOnlyValue } from '@/components/useClientOnlyValue';
@@ -22,27 +22,14 @@ export default function DrawerTabLayout() {
         name="index"
         options={{
           title: t('home'),
-          tabBarIcon: ({ color }) => (
-            <SymbolView
-              name={{
-                ios: 'chevron.left.forwardslash.chevron.right',
-                android: 'code',
-                web: 'code',
-              }}
-              tintColor={color}
-              size={28}
-            />
-          ),
+          tabBarIcon: ({ color }) => <Ionicons name="home-outline" size={28} color={color} />,
           headerRight: () => (
             <Link href="/modal" asChild>
-              <Pressable style={{ marginRight: 15 }}>
+              <Pressable className="mr-4">
                 {({ pressed }) => (
-                  <SymbolView
-                    name={{ ios: 'info.circle', android: 'info', web: 'info' }}
-                    size={25}
-                    tintColor={Colors[colorScheme ?? 'light'].text}
-                    style={{ opacity: pressed ? 0.5 : 1 }}
-                  />
+                  <View className={pressed ? 'opacity-50' : 'opacity-100'}>
+                    <Ionicons name="information-circle-outline" size={25} color={Colors[colorScheme ?? 'light'].text} />
+                  </View>
                 )}
               </Pressable>
             </Link>
@@ -53,17 +40,7 @@ export default function DrawerTabLayout() {
         name="two"
         options={{
           title: t('tabTwo'),
-          tabBarIcon: ({ color }) => (
-            <SymbolView
-              name={{
-                ios: 'chevron.left.forwardslash.chevron.right',
-                android: 'code',
-                web: 'code',
-              }}
-              tintColor={color}
-              size={28}
-            />
-          ),
+          tabBarIcon: ({ color }) => <Ionicons name="layers-outline" size={28} color={color} />,
         }}
       />
     </Tabs>

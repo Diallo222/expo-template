@@ -18,6 +18,7 @@ import { useColorScheme } from '@/components/useColorScheme';
 import { hydrateAuth, selectAuthHydrated } from '@/features/auth';
 import i18n from '@/i18n/i18n';
 import { AlertsProvider } from '@/providers/AlertsProvider';
+import { QueryProvider } from '@/providers/QueryProvider';
 import { UpdatesGate } from '@/providers/UpdatesGate';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { store } from '@/store/store';
@@ -47,13 +48,15 @@ export default function RootLayout() {
 
   return (
     <Provider store={store}>
-      <UpdatesGate>
-        <AlertsProvider>
-          <I18nextProvider i18n={i18n}>
-            <RootLayoutWithTheme />
-          </I18nextProvider>
-        </AlertsProvider>
-      </UpdatesGate>
+      <QueryProvider>
+        <UpdatesGate>
+          <AlertsProvider>
+            <I18nextProvider i18n={i18n}>
+              <RootLayoutWithTheme />
+            </I18nextProvider>
+          </AlertsProvider>
+        </UpdatesGate>
+      </QueryProvider>
     </Provider>
   );
 }
@@ -65,7 +68,7 @@ function RootLayoutWithTheme() {
   return (
     <PaperProvider theme={paperTheme}>
       <SafeAreaProvider>
-        <GestureHandlerRootView style={{ flex: 1 }}>
+        <GestureHandlerRootView className="flex-1">
           <BottomSheetModalProvider>
             <RootLayoutNav />
           </BottomSheetModalProvider>

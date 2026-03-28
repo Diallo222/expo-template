@@ -11,3 +11,4 @@ export {
   selectLoginStatus,
 } from './selectors';
 export type { AuthSession, LoginCredentials, LoginResponse } from './types';
+export { loginFormSchema, type LoginFormValues } from './loginFormSchema';

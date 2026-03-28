@@ -17,9 +17,11 @@ export default function TabOneScreen() {
       <View className="my-6 h-px w-4/5 bg-neutral-200 dark:bg-neutral-700" />
       <EditScreenInfo path="app/(drawer)/(tabs)/index.tsx" />
       <DemoBottomSheet label={t('openSheet')} title={t('sheetTitle')} />
-      <Button style={{ marginTop: 24 }} mode="outlined" onPress={() => void dispatch(logout())}>
-        Sign out
-      </Button>
+      <View className="mt-6">
+        <Button mode="outlined" onPress={() => void dispatch(logout())}>
+          Sign out
+        </Button>
+      </View>
     </View>
   );
 }

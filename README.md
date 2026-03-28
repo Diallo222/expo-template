@@ -1,6 +1,6 @@
 # expo-template
 
-Production-oriented Expo + React Native starter: **Expo Router** (file routes in `app/`), **TypeScript (strict)**, **NativeWind v4**, **React Native Paper**, **@gorhom/bottom-sheet** v5, **Reanimated** + **Gesture Handler**, **Redux Toolkit** with **feature folders**, and a small **API layer** (Axios + thin wrappers).
+Production-oriented Expo + React Native starter: **Expo Router** (file routes in `app/`), **TypeScript (strict)**, **NativeWind v4**, **React Native Paper**, **@gorhom/bottom-sheet** v5, **Reanimated** + **Gesture Handler**, **Redux Toolkit** with **feature folders**, **TanStack Query**, **react-hook-form** + **Zod**, **@expo/vector-icons** (Ionicons), and a small **API layer** (Axios + thin wrappers).
 
 Hermes and the **New Architecture** are enabled in [app.json](app.json).
 
@@ -36,21 +36,22 @@ Hermes and the **New Architecture** are enabled in [app.json](app.json).
 | `types/` | Add shared cross-cutting types here |
 | `utils/fileCache.ts` | LRU cache for file **metadata/URIs**—not blobs in Redux |
 | `i18n/` | `i18next` + `expo-localization` |
-| `providers/` | `UpdatesGate` (OTA fetch), `AlertsProvider` (global snackbar) |
+| `providers/` | `QueryProvider`, `UpdatesGate` (OTA fetch), `AlertsProvider` (global snackbar) |
 
 ## Providers (outer → inner)
 
 Order in [app/_layout.tsx](app/_layout.tsx):
 
 1. Redux `Provider`
-2. `UpdatesGate` (`expo-updates` check in production)
-3. `AlertsProvider` (Paper `Snackbar`)
-4. `I18nextProvider`
-5. Paper `PaperProvider`
-6. `SafeAreaProvider`
-7. `GestureHandlerRootView`
-8. `@gorhom/bottom-sheet` `BottomSheetModalProvider`
-9. React Navigation `ThemeProvider` + `Stack`
+2. `QueryProvider` ([TanStack Query](https://tanstack.com/query/latest))
+3. `UpdatesGate` (`expo-updates` check in production)
+4. `AlertsProvider` (Paper `Snackbar`)
+5. `I18nextProvider`
+6. Paper `PaperProvider`
+7. `SafeAreaProvider`
+8. `GestureHandlerRootView`
+9. `@gorhom/bottom-sheet` `BottomSheetModalProvider`
+10. React Navigation `ThemeProvider` + `Stack`
 
 Splash is hidden after fonts load and **auth hydration** completes (`hydrateAuth`).
 
@@ -74,6 +75,18 @@ Use **EAS Secrets** for production env injection.
 1. Create `features/<name>/` with `slice.ts`, `thunks.ts`, `selectors.ts`, `types.ts`, and a public `index.ts` (export thunks/selectors/types only).
 2. Register the reducer in [store/store.ts](store/store.ts).
 3. Import from `@/features/<name>` elsewhere—**not** from another feature’s `slice.ts`.
+
+## Forms and validation
+
+The login screen uses **react-hook-form** with **Zod** (`loginFormSchema` in [features/auth/loginFormSchema.ts](features/auth/loginFormSchema.ts)) and `@hookform/resolvers/zod`. Use the same pattern for other forms.
+
+## TanStack Query
+
+Use `useQuery` / `useMutation` in screens for server state; keep **Redux** for client session and feature slices. The shared `QueryClient` lives in [providers/QueryProvider.tsx](providers/QueryProvider.tsx).
+
+## Icons
+
+Tab and header icons use **Ionicons** from [@expo/vector-icons](https://docs.expo.dev/guides/icons/) (bundled with Expo, no extra native setup).
 
 ## NativeWind
 
